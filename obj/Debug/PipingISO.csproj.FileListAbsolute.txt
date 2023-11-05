@@ -1,0 +1,22 @@
+C:\Users\Song\source\repos\PipingISO\bin\Debug\PipingISO.exe.config
+C:\Users\Song\source\repos\PipingISO\bin\Debug\PipingISO.exe
+C:\Users\Song\source\repos\PipingISO\bin\Debug\PipingISO.pdb
+C:\Users\Song\source\repos\PipingISO\obj\Debug\PipingISO.csproj.AssemblyReference.cache
+C:\Users\Song\source\repos\PipingISO\obj\Debug\PipingISO.csproj.ResolveComReference.cache
+C:\Users\Song\source\repos\PipingISO\obj\Debug\PipingISO.Form1.resources
+C:\Users\Song\source\repos\PipingISO\obj\Debug\PipingISO.Properties.Resources.resources
+C:\Users\Song\source\repos\PipingISO\obj\Debug\PipingISO.csproj.GenerateResource.cache
+C:\Users\Song\source\repos\PipingISO\obj\Debug\PipingISO.csproj.CoreCompileInputs.cache
+C:\Users\Song\source\repos\PipingISO\obj\Debug\PipingISO.exe
+C:\Users\Song\source\repos\PipingISO\obj\Debug\PipingISO.pdb
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\bin\Debug\PipingISO.exe.config
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\bin\Debug\PipingISO.exe
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\bin\Debug\PipingISO.pdb
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\obj\Debug\PipingISO.csproj.AssemblyReference.cache
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\obj\Debug\PipingISO.csproj.ResolveComReference.cache
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\obj\Debug\PipingISO.Form1.resources
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\obj\Debug\PipingISO.Properties.Resources.resources
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\obj\Debug\PipingISO.csproj.GenerateResource.cache
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\obj\Debug\PipingISO.csproj.CoreCompileInputs.cache
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\obj\Debug\PipingISO.exe
+C:\Users\Song\RiderProjects\PipingISO (3) (2)\obj\Debug\PipingISO.pdb
