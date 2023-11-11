@@ -110,8 +110,8 @@ namespace PipingISO
   
         private void Daw_WinForm_Button_Click(object sender, EventArgs e)
         {
-            DrawWinForm drawWinForm = new DrawWinForm();
-            drawWinForm.draw(table_2_5R);
+            DrawWinForm drawWinForm = new DrawWinForm(table_2_5R);
+            drawWinForm.draw();
         }
     }
 }

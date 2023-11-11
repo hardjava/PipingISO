@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Windows.Forms;
+using Microsoft.Office.Core;
 
 namespace PipingISO
 {
@@ -109,6 +110,9 @@ namespace PipingISO
             rectangle.Line.ForeColor.RGB = (int)Excel.XlRgbColor.rgbNavy;
             rectangle.Fill.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
             rectangle.Fill.Transparency = 1.0f;
+            
+            // 그려진 사각형을 맨 뒤로 보내기
+            rectangle.ZOrder(MsoZOrderCmd.msoSendToBack);
 
             // 이미지의 절대 경로 얻기
             string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;

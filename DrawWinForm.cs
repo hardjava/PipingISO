@@ -1,116 +1,135 @@
 ﻿using System;
 using System.Data;
-using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
+using System.Drawing;
 
 namespace PipingISO
 {
-    public class DrawWinForm
+    public class DrawWinForm : Form
     {
-        private Chart chart;
-        private Form form;
+        private PictureBox pictureBox;
+        private DataTable table;
 
-        public void draw(DataTable table)
+        public DrawWinForm(DataTable table)
+        {
+            this.table = table;
+        }
+
+        public void draw()
         {
 
-            if (table == null)
+            if (table == null || table.Rows.Count < 2)
             {
-                MessageBox.Show("Value is Null");
+                // 데이터가 충분하지 않으면 그리지 않음
+                MessageBox.Show("Value is Null or not enough data points to draw.");
+                return;
             }
             else
             {
-                chart = new Chart();
-                
-                ChartArea chartArea = new ChartArea();
-                chart.ChartAreas.Add(chartArea);
-
-                Series series = new Series();
-                series.ChartType = SeriesChartType.Line;
-                foreach (DataRow row in table.Rows)
+                pictureBox = new PictureBox
                 {
-                    if (Double.TryParse(row[0].ToString(), out double x))
-                    {
-                        if (Double.TryParse(row[1].ToString(), out double y))
-                        {
-                            series.Points.AddXY(x, y);
-                        }
-                    }
-                    else
-                    {
-                        DataPoint dataPoint = new DataPoint();
-                        dataPoint.IsEmpty = true;
-                        series.Points.Add(dataPoint);
-                    }
-                }
-                series.Color = Color.Black;
+                    Dock = DockStyle.Fill,
+                    BackColor = Color.White
+                };
 
-                chart.Series.Add(series);
-              
-                form = new Form();
+                // Paint 이벤트에 대한 핸들러 연결
+                pictureBox.Paint += PictureBox_Paint;
 
-                setSize();
+                // PictureBox를 폼에 추가
+                Controls.Add(pictureBox);
 
-                form.Controls.Add(chart);
+                // 폼의 기본 설정
+                Width = 1200;
+                Height = 800;
 
-                removeAxis();
-
-                chart.Titles.Add(addImage());
-
-                form.Show();
-                
-                form.FormClosing += Form_FormClosing;
+                ShowDialog();
             }
         }
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+
+        private void PictureBox_Paint(object sender, PaintEventArgs e)
         {
-            chart.Series.Clear();
-            chart.Dispose();
-            form.Dispose();
-        }
+            // Graphics 개체를 가져와서 선을 그림
+            Graphics g = e.Graphics;
+            Pen pen = new Pen(Color.Black);
 
-        private void setSize()
-        {
-            int height = (int)(10.48 * 37.8);
-            int width = (int)(18.91 * 37.8);
+            float scale = 7;
+            int worksheetHeight = 80; // Adjust this value according to your needs
+            int offsetX = 60; // This is the amount by which we will shift the lines to the right
 
-            chart.Size = new Size(width, height);
+            double minX = double.MaxValue, minY = double.MaxValue;
+            double maxX = double.MinValue, maxY = double.MinValue;
 
-            form.Size = new Size((int)(width * 1.2), (int)(height * 1.2));
-
-            chart.Left = (form.ClientSize.Width - chart.Width) / 2;
-            chart.Top = (form.ClientSize.Height - chart.Height) / 2;
-        }
-
-        private void removeAxis()
-        {
-            if (chart != null && chart.ChartAreas.Count > 0)
+            for (int i = 0; i < table.Rows.Count - 1; i++)
             {
-                chart.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
+                if (table.Rows[i][0] != DBNull.Value && table.Rows[i][1] != DBNull.Value &&
+                    table.Rows[i + 1][0] != DBNull.Value && table.Rows[i + 1][1] != DBNull.Value)
+                {
+                    double startX = Convert.ToDouble(table.Rows[i][0]);
+                    double startY = Convert.ToDouble(table.Rows[i][1]);
+                    double endX = Convert.ToDouble(table.Rows[i + 1][0]);
+                    double endY = Convert.ToDouble(table.Rows[i + 1][1]);
 
-                chart.ChartAreas[0].AxisY.Enabled = AxisEnabled.False;
+                    // Flip the Y coordinates
+                    startY = (worksheetHeight - startY) * scale;
+                    endY = (worksheetHeight - endY) * scale;
+
+                    // Apply the horizontal offset
+                    startX = (startX + offsetX) * scale;
+                    endX = (endX + offsetX) * scale;
+
+                    minX = Math.Min(minX, Math.Min(startX, endX));
+                    maxX = Math.Max(maxX, Math.Max(startX, endX));
+                    minY = Math.Min(minY, Math.Min(startY, endY));
+                    maxY = Math.Max(maxY, Math.Max(startY, endY));
+
+                    g.DrawLine(pen, (float)startX, (float)startY, (float)endX, (float)endY);
+                }
             }
+            
+            pen.Dispose();   
+            // shape 그리기
+            float shapeScale = 1.3f;
+
+            float width = (float)(maxX - minX) * shapeScale;
+            float height = (float)(maxY - minY) * shapeScale;
+            float left = (float)minX - (float)(maxX - minX) * (shapeScale - 1) / 2;
+            float top = (float)minY - (float)(maxY - minY) * (shapeScale - 1) / 2;
+            drawShapeWithImage(left, top, width, height, e);
         }
 
-        private Title addImage()
+        private void drawShapeWithImage(float left, float top, float width, float height, PaintEventArgs e)
         {
-            Title title = new Title();
-            string imagePath = "Direction.png";
-            Image image = Image.FromFile(imagePath);
+            Graphics g = e.Graphics;
+            
+            // 사각형 그리기를 위한 펜 생성
+            Pen pen = new Pen(Color.Navy, 2);
+            
+            // 사각형 그리기
+            g.DrawRectangle(pen, left, top, width, height);
+            
+            // 이미지의 절대 경로 얻기
+            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string imagePath = System.IO.Path.Combine(currentDirectory, "images", "Direction.png");
+            
+            // 이미지 삽입
+            using (Image image = Image.FromFile(imagePath))
+            {
+                // 조절할 이미지의 크기를 설정
+                int newImageWidth = 50;   // 새 너비
+                int newImageHeight = 50;  // 새 높이
 
-            title.BackImage = imagePath;
-            title.BackImageWrapMode = ChartImageWrapMode.Scaled;
-            title.Position.Auto = false;
-            title.DockedToChartArea = chart.ChartAreas[0].Name;
-            title.IsDockedInsideChartArea = false;
-            title.Docking = Docking.Right;
-            title.Position.X = 95;
-            title.Position.Y = 5;
+                // 사각형의 우측 상단에 이미지를 배치하기 위한 위치 계산
+                float imageLeft = left + width - newImageWidth;
+                float imageTop = top;
 
-            title.Position.Width = 10;
-            title.Position.Height = 10;
+                // 이미지의 새 위치와 크기를 정의
+                Rectangle destRect = new Rectangle((int)imageLeft, (int)imageTop, newImageWidth, newImageHeight);
 
-            return title;
+                // 조절된 크기로 이미지를 그림
+                g.DrawImage(image, destRect);
+            }
+            
+            pen.Dispose();
         }
     }
 }
