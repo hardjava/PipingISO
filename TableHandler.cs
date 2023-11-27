@@ -60,7 +60,7 @@ namespace PipingISO
             }
         }
 
-        public void init2_5F_Table(DataTable table, DataTable table_3D)
+        public void transfer3Dto2D(DataTable table, DataTable table_3D)
         {
             table.Columns.Add("x", typeof(double));
             table.Columns.Add("y", typeof(double));
@@ -292,10 +292,8 @@ namespace PipingISO
         }
         */
 
-      public void removeBackLine(DataTable table, DataTable table_3D_scale, DataTable table_2_5R)
+      public void removeBackLine(DataTable table_3D_scale, DataTable table_2_5R)
         {
-            table.Columns.Add("x", typeof(double));
-            table.Columns.Add("y", typeof(double));
             // 기준 선분
             int i;
             for (i = 1; i < table_2_5R.Rows.Count; i++)
@@ -315,12 +313,11 @@ namespace PipingISO
                         //대상 라인
                         for (int j = 1; j < table_2_5R.Rows.Count; j++)
                         {
-                            if (j != i + 1 && j != i - 1 && j != i + 2 && j != i - 2)
+                            if (j != i + 1 && j != i - 1)
                             {
                                 if (Double.TryParse(table_2_5R.Rows[j][0].ToString(), out double comparisonX2))
                                 {
-                                    if (Double.TryParse(table_2_5R.Rows[j - 1][0].ToString(),
-                                            out double comparisonX1))
+                                    if (Double.TryParse(table_2_5R.Rows[j - 1][0].ToString(), out double comparisonX1))
                                     {
                                         Double.TryParse(table_2_5R.Rows[j][1].ToString(), out double comparisonY2);
 
@@ -330,18 +327,80 @@ namespace PipingISO
                                         Point comparisonP2 = new Point(comparisonX2, comparisonY2);
 
                                         Line comparisonLine = new Line(comparisonP1, comparisonP2); // 비교 라인
-
-                                        if (standardLine.isLineIntersectAndBehind(comparisonLine))
+                                        double t, s;
+                                        if (!comparisonP1.isSameValue(standardP2) && !comparisonP2.isSameValue(standardP1) && standardLine.isLineIntersect(comparisonLine,out t,out s))
                                         {
-                                            MessageBox.Show(i + " " + j);
-                                            // 겹치고 뒤에 있는 선이면 반 갈라서 넣기
+                                            Double.TryParse(table_3D_scale.Rows[i][0].ToString(), out double standard3dX2);
+                                            Double.TryParse(table_3D_scale.Rows[i - 1][0].ToString(), out double standard3dX1);
+                                            Double.TryParse(table_3D_scale.Rows[i][1].ToString(), out double standard3dY2);
+                                            Double.TryParse(table_3D_scale.Rows[i - 1][1].ToString(), out double standard3dY1);
+                                            Double.TryParse(table_3D_scale.Rows[i][2].ToString(), out double standard3dZ2);
+                                            Double.TryParse(table_3D_scale.Rows[i - 1][2].ToString(), out double standard3dZ1);
+
+                                            Point standard3dP1 = new Point(standard3dX1, standard3dY1, standard3dZ1); // 기준 라인의 3D 좌표를 이용한 점
+                                            Point standard3dP2 = new Point(standard3dX2, standard3dY2, standard3dZ2);
+
+                                            Double.TryParse(table_3D_scale.Rows[j][0].ToString(), out double comparison3dX2);
+                                            Double.TryParse(table_3D_scale.Rows[j - 1][0].ToString(), out double comparison3dX1);
+                                            Double.TryParse(table_3D_scale.Rows[j][1].ToString(), out double comparison3dY2);
+                                            Double.TryParse(table_3D_scale.Rows[j - 1][1].ToString(), out double comparison3dY1);
+                                            Double.TryParse(table_3D_scale.Rows[j][2].ToString(), out double comparison3dZ2);
+                                            Double.TryParse(table_3D_scale.Rows[j - 1][2].ToString(), out double comparison3dZ1);
+
+                                            Point comparison3dP1 = new Point(comparison3dX1, comparison3dY1, comparison3dZ1);
+                                            Point comparison3dP2 = new Point(comparison3dX2, comparison3dY2, comparison3dZ2);
+
+                                            if (standardLine.isBehindLine(comparisonLine, standard3dP1, standard3dP2,
+                                                    comparison3dP1, comparison3dP2, t, s))
+                                            {
+                                                //standardLine 이 BehindLine 이면 Cut
+                                                // standardX1
+                                                // standardX2
+                                                // standardY1
+                                                // standardY2
+                                                
+                                                double cuttedSclae = 0.5;
+                                                double tX = (1 - t) * standardX1 +
+                                                             t * standardX2;
+                                                double tY = (1 - t) * standardY1 +
+                                                            t * standardY2;
+
+                                                // 선분의 방향 벡터 계산
+                                                double directionX = standardX2 - standardX1;
+                                                double directionY = standardY2 - standardY1;
+                                                
+                                                // 방향 벡터의 길이(유클리드 거리)를 계산.
+                                                double length = Math.Sqrt(directionX * directionX + directionY * directionY);
+
+                                                // 방향 벡터를 정규화 (길이가 1이 되도록 만든다).
+                                                double normalizedDirectionX = directionX / length;
+                                                double normalizedDirectionY = directionY / length;
+                                                
+                                                // t에 대한 교차점에서 cuttedScale만큼 이동하여 새로운 점을 계산
+                                                double cuttedX1 = tX - cuttedSclae * normalizedDirectionX;
+                                                double cuttedY1 = tY - cuttedSclae * normalizedDirectionY;
+
+                                                double cuttedX2 = tX + cuttedSclae * normalizedDirectionX;
+                                                double cuttedY2 = tY + cuttedSclae * normalizedDirectionY;
+                                                
+                                                DataRow newRow1 = table_2_5R.NewRow(); 
+                                                table_2_5R.Rows.InsertAt(newRow1, i);
+                                                table_2_5R.Rows[i]["x"] = cuttedX1;
+                                                table_2_5R.Rows[i]["y"] = cuttedY1;
+
+                                                DataRow newRow2 = table_2_5R.NewRow();
+                                                table_2_5R.Rows.InsertAt(newRow2, i + 1);
+                                                
+                                                DataRow newRow3 = table_2_5R.NewRow(); 
+                                                table_2_5R.Rows.InsertAt(newRow3, i + 2);
+                                                table_2_5R.Rows[i + 2]["x"] = cuttedX2;
+                                                table_2_5R.Rows[i + 2]["y"] = cuttedY2;
                                             }
                                         }
+                                    }
                                 }
                             }
-                        } // 비교 끝남
-                        //그냥 넣기
-                        
+                        }
                     }
                 }
             }

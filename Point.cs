@@ -35,5 +35,10 @@ namespace PipingISO
         {
             return z;
         }
+
+        public bool isSameValue(Point other)
+        {
+            return x == other.x && y == other.y && z == other.z;
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace PipingISO
         private DataTable table_2_5F; // ISO_2.5F 그리는 데이터 저장
         private DataTable table_2_5R; // ISO_2.5R 그리는 데이터 저장
         private DataTable table_scale; // scale 값이 저장되어 있는 데이터 저장
-        private DataTable newTable_2_5R;
+        // private DataTable newTable_2_5R;
         public Form1()
         {
             InitializeComponent();
@@ -56,14 +56,15 @@ namespace PipingISO
             table_2_5F = new DataTable();
             table_2_5R = new DataTable();
             table_scale = new DataTable();
-            newTable_2_5R = new DataTable();
+            // newTable_2_5R = new DataTable();
 
-            tableHandler.init3D_Table(table_3D, dataGridView1);
-            tableHandler.initScale_Table(table_scale, dataGridView1);
-            tableHandler.init2_5F_Table(table_2_5F, table_3D);
-            tableHandler.init2_5R_Table(table_2_5R, table_2_5F, dataGridView1, table_scale);
-            tableHandler.init3D_scale_Table(table_3D_scale, table_3D, dataGridView1, table_scale);
-            tableHandler.removeBackLine(newTable_2_5R, table_3D_scale, table_2_5R);
+            tableHandler.init3D_Table(table_3D, dataGridView1); // 초기 3차원 좌표 테이블 초기화
+            tableHandler.initScale_Table(table_scale, dataGridView1); // Scale 테이블 초기화
+            tableHandler.transfer3Dto2D(table_2_5F, table_3D); // 2_5F 테이블 초기화 (table_3D 테이블 이용)
+            // tableHandler.init2_5R_Table(table_2_5R, table_2_5F, dataGridView1, table_scale);
+            tableHandler.init3D_scale_Table(table_3D_scale, table_3D, dataGridView1, table_scale); // Scale이 적용된 3차원 테이블 초기화
+            tableHandler.transfer3Dto2D(table_2_5R, table_3D_scale); // 2_5R 테이블 초기화 (Scale이 적용된 3차원 테이블을 이용)
+            tableHandler.removeBackLine(table_3D_scale, table_2_5R);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -105,7 +106,7 @@ namespace PipingISO
 
             if (comboBox1.SelectedIndex == 6)
             {
-                dataGridView2.DataSource = newTable_2_5R;
+                // dataGridView2.DataSource = newTable_2_5R;
                 dataGridView2.AllowUserToAddRows = false;
             }
             
