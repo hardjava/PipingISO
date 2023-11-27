@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace PipingISO
 {
     public partial class Form1 : Form
     {
-        private DataTable table_3D;
-        private DataTable table_2_5F;
-        private DataTable table_2_5R;
-        private DataTable table_scale;
+        private DataTable table_3D; // 3D 데이터 저장
+        private DataTable table_3D_scale; // scale 후의 3D 데이터 저장
+        private DataTable table_2_5F; // ISO_2.5F 그리는 데이터 저장
+        private DataTable table_2_5R; // ISO_2.5R 그리는 데이터 저장
+        private DataTable table_scale; // scale 값이 저장되어 있는 데이터 저장
+        private DataTable newTable_2_5R;
         public Form1()
         {
             InitializeComponent();
@@ -54,20 +45,25 @@ namespace PipingISO
             table_2_5F = null;
             table_2_5R = null;
             table_scale = null;
+            table_3D_scale = null;
         }
 
         private void initTable()
         {
             TableHandler tableHandler = new TableHandler();
             table_3D = new DataTable();
+            table_3D_scale = new DataTable();
             table_2_5F = new DataTable();
             table_2_5R = new DataTable();
             table_scale = new DataTable();
+            newTable_2_5R = new DataTable();
 
             tableHandler.init3D_Table(table_3D, dataGridView1);
-            tableHandler.init2_5F_Table(table_2_5F, table_3D);
             tableHandler.initScale_Table(table_scale, dataGridView1);
+            tableHandler.init2_5F_Table(table_2_5F, table_3D);
             tableHandler.init2_5R_Table(table_2_5R, table_2_5F, dataGridView1, table_scale);
+            tableHandler.init3D_scale_Table(table_3D_scale, table_3D, dataGridView1, table_scale);
+            tableHandler.removeBackLine(newTable_2_5R, table_3D_scale, table_2_5R);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -100,6 +96,19 @@ namespace PipingISO
                 dataGridView2.DataSource = table_2_5R;
                 dataGridView2.AllowUserToAddRows = false;
             }
+
+            if (comboBox1.SelectedIndex == 5)
+            {
+                dataGridView2.DataSource = table_3D_scale;
+                dataGridView2.AllowUserToAddRows = false;
+            }
+
+            if (comboBox1.SelectedIndex == 6)
+            {
+                dataGridView2.DataSource = newTable_2_5R;
+                dataGridView2.AllowUserToAddRows = false;
+            }
+            
         }
 
         private void Draw_Button_Click(object sender, EventArgs e)
