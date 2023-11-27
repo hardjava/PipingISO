@@ -296,6 +296,7 @@ namespace PipingISO
         {
             // 기준 선분
             int i;
+            int repeatNum = table_2_5R.Rows.Count;
             for (i = 1; i < table_2_5R.Rows.Count; i++)
             {
                 if(Double.TryParse(table_2_5R.Rows[i][0].ToString(), out double standardX2)){
@@ -358,7 +359,6 @@ namespace PipingISO
                                                 // standardX2
                                                 // standardY1
                                                 // standardY2
-                                                
                                                 double cuttedSclae = 0.5;
                                                 double tX = (1 - t) * standardX1 +
                                                              t * standardX2;
@@ -383,18 +383,28 @@ namespace PipingISO
                                                 double cuttedX2 = tX + cuttedSclae * normalizedDirectionX;
                                                 double cuttedY2 = tY + cuttedSclae * normalizedDirectionY;
                                                 
-                                                DataRow newRow1 = table_2_5R.NewRow(); 
-                                                table_2_5R.Rows.InsertAt(newRow1, i);
+                                                DataRow newRow25R1 = table_2_5R.NewRow(); 
+                                                table_2_5R.Rows.InsertAt(newRow25R1, i);
                                                 table_2_5R.Rows[i]["x"] = cuttedX1;
                                                 table_2_5R.Rows[i]["y"] = cuttedY1;
 
-                                                DataRow newRow2 = table_2_5R.NewRow();
-                                                table_2_5R.Rows.InsertAt(newRow2, i + 1);
+                                                DataRow newRow3D1 = table_3D_scale.NewRow();
+                                                table_3D_scale.Rows.InsertAt(newRow3D1, i);
                                                 
-                                                DataRow newRow3 = table_2_5R.NewRow(); 
-                                                table_2_5R.Rows.InsertAt(newRow3, i + 2);
+                                                DataRow newRow25R2 = table_2_5R.NewRow();
+                                                table_2_5R.Rows.InsertAt(newRow25R2, i + 1);
+
+                                                DataRow newRow3D2 = table_3D_scale.NewRow();
+                                                table_3D_scale.Rows.InsertAt(newRow3D2, i + 1);
+                                                
+                                                DataRow newRow25R3 = table_2_5R.NewRow(); 
+                                                table_2_5R.Rows.InsertAt(newRow25R3, i + 2);
                                                 table_2_5R.Rows[i + 2]["x"] = cuttedX2;
                                                 table_2_5R.Rows[i + 2]["y"] = cuttedY2;
+                                                
+                                                DataRow newRow3D3 = table_3D_scale.NewRow();
+                                                table_3D_scale.Rows.InsertAt(newRow3D3, i + 2);
+
                                             }
                                         }
                                     }
