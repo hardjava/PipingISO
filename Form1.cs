@@ -10,6 +10,7 @@ namespace PipingISO
         private DataTable table_3D_scale; // scale 후의 3D 데이터 저장
         private DataTable table_2_5F; // ISO_2.5F 그리는 데이터 저장
         private DataTable table_2_5R; // ISO_2.5R 그리는 데이터 저장
+        private DataTable table_notScaled_2_5R;
         private DataTable table_scale; // scale 값이 저장되어 있는 데이터 저장
         // private DataTable newTable_2_5R;
         public Form1()
@@ -46,6 +47,7 @@ namespace PipingISO
             table_2_5R = null;
             table_scale = null;
             table_3D_scale = null;
+            table_notScaled_2_5R = null;
         }
 
         private void initTable()
@@ -56,6 +58,7 @@ namespace PipingISO
             table_2_5F = new DataTable();
             table_2_5R = new DataTable();
             table_scale = new DataTable();
+            table_notScaled_2_5R = new DataTable();
             // newTable_2_5R = new DataTable();
 
             tableHandler.init3D_Table(table_3D, dataGridView1); // 초기 3차원 좌표 테이블 초기화
@@ -63,6 +66,7 @@ namespace PipingISO
             tableHandler.transfer3Dto2D(table_2_5F, table_3D); // 2_5F 테이블 초기화 (table_3D 테이블 이용)
             // tableHandler.init2_5R_Table(table_2_5R, table_2_5F, dataGridView1, table_scale);
             tableHandler.init3D_scale_Table(table_3D_scale, table_3D, dataGridView1, table_scale); // Scale이 적용된 3차원 테이블 초기화
+            tableHandler.transfer3Dto2D(table_notScaled_2_5R, table_3D_scale);
             tableHandler.transfer3Dto2D(table_2_5R, table_3D_scale); // 2_5R 테이블 초기화 (Scale이 적용된 3차원 테이블을 이용)
             tableHandler.removeBackLine(table_3D_scale, table_2_5R);
         }
@@ -82,13 +86,13 @@ namespace PipingISO
 
             if (comboBox1.SelectedIndex == 2)
             {
-                dataGridView2.DataSource = table_2_5F;
+                dataGridView2.DataSource = table_3D_scale;
                 dataGridView2.AllowUserToAddRows = false;
             }
 
             if (comboBox1.SelectedIndex == 3)
             {
-                dataGridView2.DataSource = table_scale;
+                dataGridView2.DataSource = table_2_5F;
                 dataGridView2.AllowUserToAddRows = false;
             }
 
@@ -100,21 +104,20 @@ namespace PipingISO
 
             if (comboBox1.SelectedIndex == 5)
             {
-                dataGridView2.DataSource = table_3D_scale;
+                dataGridView2.DataSource = table_scale;
                 dataGridView2.AllowUserToAddRows = false;
             }
 
             if (comboBox1.SelectedIndex == 6)
             {
-                // dataGridView2.DataSource = newTable_2_5R;
+                dataGridView2.DataSource = table_notScaled_2_5R;
                 dataGridView2.AllowUserToAddRows = false;
             }
-            
         }
 
         private void Draw_Button_Click(object sender, EventArgs e)
         {
-            DrawExcel drawExcel = new DrawExcel(table_2_5F, table_2_5R);
+            DrawExcel drawExcel = new DrawExcel(table_2_5F, table_2_5R, table_notScaled_2_5R);
             drawExcel.draw();
         }
   

@@ -33,9 +33,8 @@
                 return false; // 선분이 평행하거나 일치하는 경우
             }
 
-          t = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
-            
-          s = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
+            t = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
+            s = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
 
             // t 와 s 가 모두 0이면, 선분이 일치하는 경우
             if (t == 0 && s == 0)
@@ -66,6 +65,22 @@
             Point sPoint = new Point(x3ds, y3ds, z3ds);
 
             return getDepth(tPoint) < getDepth(sPoint);
+        }
+
+        public double getGradient() // 기울기 구하기
+        {
+            if (point2.getX() - point1.getX() == 0 || point2.getY() - point1.getY() == 0) // 수직이거나 수평이면 0 반환
+            {
+                return 0;
+            }
+
+            // 기울기 계산
+            return (point2.getY() - point1.getY()) / (point2.getX() - point1.getX());
+        }
+
+        public bool IsSlopeHorizontal()
+        {
+            return point2.getY() - point1.getY() == 0;
         }
     }
 }

@@ -156,11 +156,11 @@ namespace PipingISO
             this.comboBox1.Items.AddRange(new object[] {
             "",
             "3D_Data",
-            "2D_Data",
-            "Scale_Data",
-            "2_5R_Data",
             "3D_Scale_Data",
-            "New_Table_2.5R"
+            "2_5F_Data",
+            "2_5R_Data",
+            "Scale_Data",
+            "table_notScaled_2_5R"
             });
             this.comboBox1.Location = new System.Drawing.Point(6, 27);
             this.comboBox1.Name = "comboBox1";

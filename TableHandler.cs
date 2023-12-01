@@ -229,69 +229,7 @@ namespace PipingISO
                 }
             }
         }
-/*
-        public void removeBackLine(DataTable table, DataTable table_3D_scale)
-        {
-            table.Columns.Add("x", typeof(double));
-            table.Columns.Add("y", typeof(double));
-            // 기준 선분
-            int i;
-            for (i = 1; i < table_3D_scale.Rows.Count; i++)
-            {
-                if(Double.TryParse(table_3D_scale.Rows[i][0].ToString(), out double standardX2)){
-                    if(Double.TryParse(table_3D_scale.Rows[i - 1][0].ToString(), out double standardX1))
-                    {
-                        Double.TryParse(table_3D_scale.Rows[i][1].ToString(), out double standardY2);
-                        Double.TryParse(table_3D_scale.Rows[i][2].ToString(), out double standardZ2);
-
-                        Double.TryParse(table_3D_scale.Rows[i - 1][1].ToString(), out double standardY1);
-                        Double.TryParse(table_3D_scale.Rows[i - 1][2].ToString(), out double standardZ1);
-
-                        Point standardP1 = new Point(standardX1, standardY1, standardZ1);
-                        Point standardP2 = new Point(standardX2, standardY2, standardZ2);
-
-                        Line standardLine = new Line(standardP1, standardP2); // 기준 라인
-
-                        //대상 라인
-                        for (int j = 1; j < table_3D_scale.Rows.Count; j++)
-                        {
-             if (j != i + 1 && j != i - 1 && j != i + 2 && j != i - 2)
-               {
-                                if (Double.TryParse(table_3D_scale.Rows[j][0].ToString(), out double comparisonX2))
-                                {
-                                    if (Double.TryParse(table_3D_scale.Rows[j - 1][0].ToString(),
-                                            out double comparisonX1))
-                                    {
-                                        Double.TryParse(table_3D_scale.Rows[j][1].ToString(), out double comparisonY2);
-                                        Double.TryParse(table_3D_scale.Rows[j][2].ToString(), out double comparisonZ2);
-
-                                        Double.TryParse(table_3D_scale.Rows[j - 1][1].ToString(),
-                                            out double comparisonY1);
-                                        Double.TryParse(table_3D_scale.Rows[j - 1][2].ToString(),
-                                            out double comparisonZ1);
-
-                                        Point comparisonP1 = new Point(comparisonX1, comparisonY1, comparisonZ1);
-                                        Point comparisonP2 = new Point(comparisonX2, comparisonY2, comparisonZ2);
-
-                                        Line comparisonLine = new Line(comparisonP1, comparisonP2); // 비교 라인
-
-                                        if (standardLine.isLineIntersectAndBehind(comparisonLine))
-                                        {
-                                            MessageBox.Show(i + " " + j);
-                                            // 겹치고 뒤에 있는 선이면 반 갈라서 넣기
-                                            }
-                                        }
-                                }
-                            }
-                        } // 비교 끝남
-                        //그냥 넣기
-                        
-                    }
-                }
-            }
-        }
-        */
-
+        
       public void removeBackLine(DataTable table_3D_scale, DataTable table_2_5R)
         {
             // 기준 선분

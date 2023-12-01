@@ -26,6 +26,11 @@ namespace PipingISO
             }
             else
             {
+                // 폼의 속성 설정
+                AutoSize = true;
+                Text = "ISO_2.5R"; // 폼의 타이틀
+                StartPosition = FormStartPosition.CenterScreen; // 폼을 화면 가운데에 배치
+                
                 pictureBox = new PictureBox
                 {
                     Dock = DockStyle.Fill,
@@ -45,7 +50,7 @@ namespace PipingISO
                 ShowDialog();
             }
         }
-
+        
         private void PictureBox_Paint(object sender, PaintEventArgs e)
         {
             // Graphics 개체를 가져와서 선을 그림
